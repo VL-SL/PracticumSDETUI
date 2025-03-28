@@ -1,2 +1,2 @@
-# PracticumSDETUI
-Практикум SDET: задание UI
+# Практикум SDET:
+задание UI
