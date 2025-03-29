@@ -1,7 +1,5 @@
 # Практикум SDET: задание UI
 
-# Практикум SDET: задание UI
-
 ## Тестируемый сайт
 [GlobalSQA Banking Project Manager](https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager)
 
