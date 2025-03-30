@@ -1,8 +1,9 @@
 package svm.sibmirsoft.pages;
 
-import java.util.List;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import java.util.List;
 
 public class CustomersPage extends BasePage {
     private final By firstNameHeader = By.xpath("//a[@ng-click=\"sortType = 'fName'; sortReverse = !sortReverse\"]");
@@ -16,30 +17,27 @@ public class CustomersPage extends BasePage {
         super(driver);
     }
 
+    @Step("Нажать на заголовок столбца 'First Name' для сортировки")
     public void clickFirstNameHeader() {
         this.click(this.firstNameHeader);
     }
 
+    @Step("Получить список всех имен клиентов")
     public List<String> getAllFirstNames() {
         return this.getTextsFromElements(this.firstNameCells);
     }
 
+    @Step("Поиск клиента по имени: {name}")
     public void searchCustomer(String name) {
         this.inputText(this.searchCustomerInput, name);
     }
 
+    @Step("Удалить первого найденного клиента")
     public void deleteFirstFoundCustomer() {
         this.click(this.deleteButtons);
     }
 
-    public String getFirstFoundAccountNumber() {
-        return (String)this.getTextsFromElements(this.accountNumberCells).get(0);
-    }
-
-    public int getVisibleCustomersCount() {
-        return this.findElements(this.customerRows).size();
-    }
-
+    @Step("Получить список всех номеров счетов")
     public List<String> getAllAccountNumbers() {
         return this.getTextsFromElements(this.accountNumberCells);
     }
