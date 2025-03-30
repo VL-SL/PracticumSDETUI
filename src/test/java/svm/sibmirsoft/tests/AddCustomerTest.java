@@ -13,7 +13,7 @@ import java.util.List;
 @Owner("Тестировщик")
 public class AddCustomerTest extends BaseTest {
 
-    @Test
+    @Test(threadPoolSize = 3, invocationCount = 1)
     @Description("Тест добавления клиента с автоматически сгенерированными данными")
     @Story("Добавление нового клиента")
     @Severity(SeverityLevel.CRITICAL)
@@ -22,7 +22,7 @@ public class AddCustomerTest extends BaseTest {
         SoftAssert softAssert = new SoftAssert();
 
         Allure.step("Открыть страницу добавления клиента", () -> {
-            ManagerPage managerPage = new ManagerPage(this.driver);
+            ManagerPage managerPage = new ManagerPage(getDriver());
             AddCustomerPage addCustomerPage = managerPage.clickAddCustomerButton();
 
             Allure.step("Генерация тестовых данных", () -> {
@@ -51,10 +51,10 @@ public class AddCustomerTest extends BaseTest {
                 });
 
                 Allure.step("Проверка алерта", () -> {
-                    String alertText = this.driver.switchTo().alert().getText();
+                    String alertText = getDriver().switchTo().alert().getText();
                     softAssert.assertTrue(alertText.contains("Customer added successfully"),
                             "Не отобразилось сообщение об успешном добавлении клиента");
-                    this.driver.switchTo().alert().accept();
+                    getDriver().switchTo().alert().accept();
                 });
             });
         });
