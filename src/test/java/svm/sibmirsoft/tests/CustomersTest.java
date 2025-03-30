@@ -1,36 +1,38 @@
-    package svm.sibmirsoft.tests;
+package svm.sibmirsoft.tests;
 
-    import io.qameta.allure.*;
-    import org.testng.annotations.BeforeMethod;
-    import org.testng.annotations.Test;
-    import org.testng.asserts.SoftAssert;
-    import svm.sibmirsoft.pages.CustomersPage;
-    import svm.sibmirsoft.pages.ManagerPage;
-    import java.util.Collections;
-    import java.util.Comparator;
-    import java.util.List;
+import io.qameta.allure.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+import svm.sibmirsoft.pages.CustomersPage;
+import svm.sibmirsoft.pages.ManagerPage;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
-    @Epic("Операции банковского менеджера")
-    @Feature("Управление клиентами")
-    @Owner("Тестировщик")
-    public class CustomersTest extends BaseTest {
-        private ManagerPage managerPage;
-        private CustomersPage customersPage;
+@Epic("Операции банковского менеджера")
+@Feature("Управление клиентами")
+@Owner("Тестировщик")
+public class CustomersTest extends BaseTest {
+    private ManagerPage managerPage;
+    private CustomersPage customersPage;
+    private static final ReentrantLock lock = new ReentrantLock();
 
-        @BeforeMethod
-        @Description("Инициализация страниц перед каждым тестом")
-        public void setUpPages() {
-            Allure.step("Открытие страницы менеджера", () -> {
-                this.managerPage = new ManagerPage(getDriver());
-                this.customersPage = this.managerPage.clickCustomersButton();
-            });
-        }
+    @BeforeMethod
+    @Description("Инициализация страниц перед каждым тестом")
+    public void setUpPages() {
+        Allure.step("Открытие страницы менеджера", () -> {
+            this.managerPage = new ManagerPage(getDriver());
+            this.customersPage = this.managerPage.clickCustomersButton();
+        });
+    }
 
-        @Test(priority = 1, threadPoolSize = 3, invocationCount = 1)
-        @Description("Тест сортировки клиентов по имени")
-        @Story("Сортировка списка клиентов")
-        @Severity(SeverityLevel.NORMAL)
-        public void testFirstNameSorting() {
+    @Test(priority = 1)
+    @Description("Тест сортировки клиентов по имени")
+    @Story("Сортировка списка клиентов")
+    @Severity(SeverityLevel.NORMAL)
+    public void testFirstNameSorting() {
+        lock.lock();
+        try {
             SoftAssert softAssert = new SoftAssert();
 
             Allure.step("Получение списка имен клиентов", () -> {
@@ -59,13 +61,18 @@
             });
 
             softAssert.assertAll();
+        } finally {
+            lock.unlock();
         }
+    }
 
-        @Test(priority = 2, threadPoolSize = 3, invocationCount = 1)
-        @Description("Тест удаления клиента со средней длиной имени")
-        @Story("Удаление клиента из системы")
-        @Severity(SeverityLevel.CRITICAL)
-        public void testDeleteCustomerByAverageNameLength() {
+    @Test(priority = 2)
+    @Description("Тест удаления клиента со средней длиной имени")
+    @Story("Удаление клиента из системы")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testDeleteCustomerByAverageNameLength() {
+        lock.lock();
+        try {
             SoftAssert softAssert = new SoftAssert();
 
             Allure.step("Получение списка клиентов", () -> {
@@ -95,17 +102,20 @@
             });
 
             softAssert.assertAll();
-        }
-
-        @Step("Нахождение имени с длиной, наиболее близкой к средней")
-        private String findNameToAverageLength(List<String> names) {
-            double averageLength = names.stream()
-                    .mapToInt(String::length)
-                    .average()
-                    .orElseThrow(() -> new IllegalStateException("Список имен пуст"));
-
-            return names.stream()
-                    .min(Comparator.comparingDouble(name -> Math.abs(name.length() - averageLength)))
-                    .orElseThrow(() -> new IllegalStateException("Не удалось найти подходящее имя"));
+        } finally {
+            lock.unlock();
         }
     }
+
+    @Step("Нахождение имени с длиной, наиболее близкой к средней")
+    private String findNameToAverageLength(List<String> names) {
+        double averageLength = names.stream()
+                .mapToInt(String::length)
+                .average()
+                .orElseThrow(() -> new IllegalStateException("Список имен пуст"));
+
+        return names.stream()
+                .min(Comparator.comparingDouble(name -> Math.abs(name.length() - averageLength)))
+                .orElseThrow(() -> new IllegalStateException("Не удалось найти подходящее имя"));
+    }
+}
