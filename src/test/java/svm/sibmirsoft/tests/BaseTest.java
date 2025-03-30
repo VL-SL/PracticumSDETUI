@@ -11,9 +11,6 @@ public class BaseTest {
     protected WebDriver driver;
     protected final String BASE_URL = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager";
 
-    public BaseTest() {
-    }
-
     @BeforeMethod
     public void setUp() {
         WebDriverManager.chromedriver().setup();

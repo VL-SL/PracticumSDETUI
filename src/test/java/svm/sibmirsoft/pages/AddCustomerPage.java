@@ -1,5 +1,6 @@
 package svm.sibmirsoft.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -13,22 +14,27 @@ public class AddCustomerPage extends BasePage {
         super(driver);
     }
 
+    @Step("Ввести имя клиента: {firstName}")
     public void setFirstName(String firstName) {
         this.inputText(this.firstNameInput, firstName);
     }
 
+    @Step("Ввести фамилию клиента: {lastName}")
     public void setLastName(String lastName) {
         this.inputText(this.lastNameInput, lastName);
     }
 
+    @Step("Ввести почтовый индекс: {postCode}")
     public void setPostCode(String postCode) {
         this.inputText(this.postCodeInput, postCode);
     }
 
+    @Step("Нажать кнопку 'Добавить клиента'")
     public void clickAddCustomerSubmit() {
         this.click(this.addCustomerSubmit);
     }
 
+    @Step("Добавить нового клиента (Имя: {firstName}, Фамилия: {lastName}, Индекс: {postCode})")
     public void addCustomer(String firstName, String lastName, String postCode) {
         this.setFirstName(firstName);
         this.setLastName(lastName);
@@ -36,14 +42,17 @@ public class AddCustomerPage extends BasePage {
         this.clickAddCustomerSubmit();
     }
 
+    @Step("Получить значение поля 'Имя'")
     public String getFirstNameValue() {
         return this.getFieldValue(this.firstNameInput);
     }
 
+    @Step("Получить значение поля 'Фамилия'")
     public String getLastNameValue() {
         return this.getFieldValue(this.lastNameInput);
     }
 
+    @Step("Получить значение поля 'Почтовый индекс'")
     public String getPostCodeValue() {
         return this.getFieldValue(this.postCodeInput);
     }
